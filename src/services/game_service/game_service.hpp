@@ -15,7 +15,7 @@ private:
      * @brief The direction the snake will move/grow next
      *
      */
-    std::atomic<Directions::Direction> directionMoving{Directions::Direction::RIGHT};
+    std::atomic<Directions::Direction> inputDirection{Directions::Direction::RIGHT};
 
     /**
      * @brief Whether or not the game is paused

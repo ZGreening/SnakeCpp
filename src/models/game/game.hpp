@@ -7,6 +7,8 @@
 #include <string>
 #include <stdexcept>
 #include <memory>
+#include <regex>
+#include <vector>
 
 /**
  * @brief The class representing a game
@@ -40,12 +42,29 @@ private:
     Point apple;
 
     /**
+     * @brief Regex for splitting message
+     *
+     */
+    const std::regex messageSplitterRegex{"[^\\n]{0," + std::to_string(static_cast<int>(board->getWidth() * 2.0 / 3.0)) + "}(?:\\n|\\ |$)"};
+
+    /**
      * @brief A message for the player
      *
      * @note Displays in the middle of the board
-     *
      */
     std::string message{};
+
+    /**
+     * @brief Message split into lines based on board width using messageSplitterRegex
+     *
+     */
+    std::vector<std::string> matches;
+
+    /**
+     * @brief The game as a string
+     *
+     */
+    std::string gameAsString;
 
 public:
     /**
@@ -53,7 +72,7 @@ public:
      *
      * @return Point
      */
-    Point &getApple() { return apple; }
+    const Point &getApple() { return apple; }
 
     /**
      * @brief Set the Apple object
@@ -87,7 +106,7 @@ public:
      *
      * @return Board
      */
-    Board &getBoard() const
+    const Board &getBoard() const
     {
         if (!board)
             throw std::invalid_argument("board is null");
@@ -120,7 +139,7 @@ public:
      *
      * @param message
      */
-    void setMessage(const std::string_view message) { this->message = std::string(message); }
+    void setMessage(const std::string &message);
 
     /**
      * @brief Returns whether or not the game is over
@@ -130,21 +149,21 @@ public:
      * @return true if there is a crash point
      * @return false if crash point is still unset
      */
-    bool isGameOver();
+    const bool isGameOver() const;
 
     /**
      * @brief Gets a random vacant point in the board
      *
      * @return Point
      */
-    Point getRandomVacantPoint();
+    const Point getRandomVacantPoint() const;
 
     /**
      * @brief Returns a string representation of the game
      *
-     * @return std::string The string of the game
+     * @return std::string& The string of the game
      */
-    std::string toString();
+    const std::string &toString();
 
     /**
      * @brief Construct a new Game object

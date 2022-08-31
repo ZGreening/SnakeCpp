@@ -3,7 +3,7 @@
 
 #include "point.hpp"
 #include "direction.hpp"
-#include <queue>
+#include <deque>
 #include <unordered_set>
 #include <stdexcept>
 
@@ -18,7 +18,7 @@ private:
      * @brief The body represented as a queue
      *
      */
-    std::queue<Point> body{};
+    std::deque<Point> body{};
 
     /**
      * @brief The body points as a hash set for quick lookup
@@ -59,7 +59,7 @@ public:
      *
      * @return Point& The head of the snake
      */
-    Point &getHead()
+    const Point &getHead() const
     {
         if (body.size() == 0)
             throw std::invalid_argument("body is empty");
@@ -71,7 +71,7 @@ public:
      *
      * @return Point&
      */
-    Point &getTail()
+    const Point &getTail() const
     {
         if (body.size() == 0)
             throw std::invalid_argument("body is empty");
@@ -79,11 +79,18 @@ public:
     }
 
     /**
+     * @brief Get the body of the snake
+     *
+     * @return const std::queue<Point>&
+     */
+    const std::deque<Point> &getBody() const { return body; }
+
+    /**
      * @brief Get the Direction object
      *
      * @return Directions::Direction
      */
-    Directions::Direction getDirection() const { return direction; }
+    const Directions::Direction getDirection() const { return direction; }
 
     /**
      * @brief Get the Is Crashed object
@@ -91,7 +98,7 @@ public:
      * @return true
      * @return false
      */
-    bool getIsCrashed() const { return isCrashed; }
+    const bool getIsCrashed() const { return isCrashed; }
 
     /**
      * @brief Construct a new Snake object
@@ -131,6 +138,13 @@ public:
      * @return false if the point is not in the snake
      */
     bool isInSnake(const Point &pointToCheck) const;
+
+    /**
+     * @brief Get the char for the snake's head in the direction it is facing
+     *
+     * @return const char
+     */
+    const char getDirectionAsChar() const;
 };
 
 #endif

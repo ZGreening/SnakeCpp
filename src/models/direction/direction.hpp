@@ -4,7 +4,7 @@
 class Directions
 {
 public:
-    enum Direction
+    enum class Direction
     {
         UP,
         RIGHT,
@@ -12,7 +12,7 @@ public:
         LEFT
     };
 
-    static bool areOppositeDirections(Direction first, Direction second);
+    const static bool areOppositeDirections(Direction first, Direction second);
 };
 
 #endif

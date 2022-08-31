@@ -125,6 +125,8 @@ double MenuService::getGameSpeed() const
         return 1.0 / 10.0 * 1000.0;
     case 3:
         return 1.0 / 15.0 * 1000.0;
+    default:
+        return -1;
     }
 }
 
@@ -138,6 +140,8 @@ int MenuService::getInitialSnakeLength() const
         return 5;
     case 3:
         return 8;
+    default:
+        return -1;
     }
 }
 

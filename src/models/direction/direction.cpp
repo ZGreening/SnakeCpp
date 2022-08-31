@@ -1,6 +1,6 @@
 #include "direction.hpp"
 
-bool Directions::areOppositeDirections(Direction first, Direction second)
+const bool Directions::areOppositeDirections(Direction first, Direction second)
 {
     switch (first)
     {

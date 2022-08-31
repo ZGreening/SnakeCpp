@@ -39,7 +39,7 @@ void GameService::processLogic()
     const std::lock_guard<std::mutex> lock(updateMutex);
 
     // Get the destination point
-    const Point destination{game->getSnake().getHead().getAdjacentPoint(directionMoving)};
+    const Point destination{game->getSnake().getHead().getAdjacentPoint(inputDirection)};
 
     static short lastAte{0};
 
@@ -47,19 +47,19 @@ void GameService::processLogic()
     if (destination == game->getApple())
     {
         updateAppleLocation();
-        game->getSnake().grow(directionMoving);
+        game->getSnake().grow(inputDirection);
         game->setScore(game->getScore() + 10);
         game->setMessage("YUM!!!");
         lastAte = 3;
     }
     else if (game->getSnake().isInSnake(destination) && game->getSnake().getTail() != destination)
     {
-        game->getSnake().crash(directionMoving);
+        game->getSnake().crash(inputDirection);
         game->setMessage("GAMEOVER!\n\nYou ate your tail!");
     }
     else if (!game->getBoard().isInBoard(destination))
     {
-        game->getSnake().crash(directionMoving);
+        game->getSnake().crash(inputDirection);
         game->setMessage("GAMEOVER!\n\nYou hit the wall!");
     }
     else
@@ -68,7 +68,7 @@ void GameService::processLogic()
             --lastAte;
         else
             game->setMessage("");
-        game->getSnake().move(directionMoving);
+        game->getSnake().move(inputDirection);
     }
 }
 
@@ -100,14 +100,14 @@ void GameService::processInput()
     }
 
     // Update direction moving
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && directionMoving != Directions::Direction::DOWN)
-        directionMoving = Directions::Direction::UP;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && directionMoving != Directions::Direction::LEFT)
-        directionMoving = Directions::Direction::RIGHT;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && directionMoving != Directions::Direction::UP)
-        directionMoving = Directions::Direction::DOWN;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && directionMoving != Directions::Direction::RIGHT)
-        directionMoving = Directions::Direction::LEFT;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && game->getSnake().getDirection() != Directions::Direction::DOWN)
+        inputDirection = Directions::Direction::UP;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && game->getSnake().getDirection() != Directions::Direction::LEFT)
+        inputDirection = Directions::Direction::RIGHT;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && game->getSnake().getDirection() != Directions::Direction::UP)
+        inputDirection = Directions::Direction::DOWN;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && game->getSnake().getDirection() != Directions::Direction::RIGHT)
+        inputDirection = Directions::Direction::LEFT;
 }
 
 void GameService::createProcessInputTask()

@@ -16,14 +16,14 @@ void Snake::push(const Point &point, bool isGrowing)
     if (isInSnake(point))
         throw std::invalid_argument("point already exists");
 
-    body.push(point);
+    body.push_back(point);
     bodySegmentsSet.insert(point);
 }
 
 void Snake::pop()
 {
     bodySegmentsSet.erase(body.front());
-    body.pop();
+    body.pop_front();
 }
 
 void Snake::move(Directions::Direction direction)
@@ -50,7 +50,7 @@ void Snake::crash(Directions::Direction direction)
     if (!Directions::areOppositeDirections(this->direction, direction) && !isCrashed)
     {
         pop();
-        body.push(getHead().getAdjacentPoint(direction));
+        body.push_back(getHead().getAdjacentPoint(direction));
         isCrashed = true;
     }
 }
@@ -58,4 +58,19 @@ void Snake::crash(Directions::Direction direction)
 bool Snake::isInSnake(const Point &pointToCheck) const
 {
     return bodySegmentsSet.find(pointToCheck) != bodySegmentsSet.end();
+}
+
+const char Snake::getDirectionAsChar() const
+{
+    switch (direction)
+    {
+    case Directions::Direction::UP:
+        return '^';
+    case Directions::Direction::RIGHT:
+        return '>';
+    case Directions::Direction::DOWN:
+        return 'v';
+    case Directions::Direction::LEFT:
+        return '<';
+    }
 }
