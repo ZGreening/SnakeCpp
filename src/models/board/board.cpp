@@ -2,10 +2,12 @@
 #include <string>
 #include <sstream>
 
-const std::string Board::createBoardString()
+using namespace std;
+
+const string Board::createBoardString()
 {
     // Create stream
-    std::stringstream toReturn;
+    stringstream toReturn;
 
     // Iterate through board
     for (int row{-1}; row <= bottomRightCorner.y + 1; row++)

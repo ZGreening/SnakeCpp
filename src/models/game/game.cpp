@@ -5,17 +5,19 @@
 #include <vector>
 #include <stdexcept>
 
-void Game::setMessage(const std::string &message)
+using namespace std;
+
+void Game::setMessage(const string &message)
 {
     // Clear current matches
     matches.clear();
 
     // Regex to limit message segments to 2/3 width of board, segments do not split words
-    const std::sregex_iterator start = std::sregex_iterator(message.begin(), message.end(), messageSplitterRegex);
-    const std::sregex_iterator end = std::sregex_iterator();
+    const sregex_iterator start = sregex_iterator(message.begin(), message.end(), messageSplitterRegex);
+    const sregex_iterator end = sregex_iterator();
 
     // Collect string matches
-    for (std::sregex_iterator match = start; match != end; ++match)
+    for (sregex_iterator match = start; match != end; ++match)
         matches.push_back(match->str());
 
     // Assign message
@@ -25,7 +27,7 @@ void Game::setMessage(const std::string &message)
 const bool Game::isGameOver() const
 {
     if (!snake)
-        throw std::invalid_argument("snake is null");
+        throw invalid_argument("snake is null");
     return snake->getIsCrashed();
 }
 
@@ -33,14 +35,14 @@ const Point Game::getRandomVacantPoint() const
 {
     // Null check
     if (!board)
-        throw std::invalid_argument("board is null");
+        throw invalid_argument("board is null");
 
     // Get a new location not in the snake
     Point newPoint;
     do
     {
-        std::uniform_int_distribution getX{1, board->getWidth()};
-        std::uniform_int_distribution getY{1, board->getHeight()};
+        uniform_int_distribution getX{1, board->getWidth()};
+        uniform_int_distribution getY{1, board->getHeight()};
         newPoint = Point{getX(Utility::getRandom()), getY(Utility::getRandom())};
     } while (snake->isInSnake(newPoint));
 
@@ -48,14 +50,14 @@ const Point Game::getRandomVacantPoint() const
     return newPoint;
 }
 
-const std::string &Game::toString()
+const string &Game::toString()
 {
     // Null check
     if (!snake || !board)
-        throw std::invalid_argument("snake or board is null");
+        throw invalid_argument("snake or board is null");
 
     // Start with the score header
-    gameAsString = "Score: " + std::to_string(score) + '\n';
+    gameAsString = "Score: " + to_string(score) + '\n';
 
     // Get length of string while it has just the score header
     short prefixLength{static_cast<short>(gameAsString.length())};

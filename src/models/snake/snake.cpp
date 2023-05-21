@@ -2,6 +2,8 @@
 #include "direction.hpp"
 #include <stdexcept>
 
+using namespace std;
+
 Snake::Snake(const Point &head, const int startingSize)
 {
     for (int index{startingSize}; index > 0; --index)
@@ -14,7 +16,7 @@ Snake::Snake(const Point &head, const int startingSize)
 void Snake::push(const Point &point, bool isGrowing)
 {
     if (isInSnake(point))
-        throw std::invalid_argument("point already exists");
+        throw invalid_argument("point already exists");
 
     body.push_back(point);
     bodySegmentsSet.insert(point);

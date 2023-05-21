@@ -1,6 +1,7 @@
 #ifndef GAME_SERVICE_H
 #define GAME_SERVICE_H
 
+#include "file_service.hpp"
 #include "game.hpp"
 #include <future>
 #include <stdexcept>
@@ -53,12 +54,6 @@ private:
      */
     std::unique_ptr<Game> game;
 
-    /**
-     * @brief The game speed
-     *
-     */
-    double gameSpeed;
-
 public:
     /**
      * @brief Get the Game object
@@ -71,6 +66,64 @@ public:
             throw std::invalid_argument("game is null");
         return *game;
     }
+
+    /**
+     * @brief Saves the score with the provided player name
+     *
+     * @param playerName The player name to associate with the saved score
+     */
+    void saveScore(const std::string &playerName);
+
+    /**
+     * @brief Saves the settings of the game
+     */
+    void saveSettings();
+
+    /**
+     * @brief Creates and starts a new game using previous settings and returns a task
+     *
+     * @return std::future<void>
+     * @throws std::invalid_argument Thrown if unable to start a game using old settings
+     */
+    std::future<void> startNewGameTask()
+    {
+        auto fileService{std::make_unique<FileService>()};
+        auto settings = fileService->loadSettings();
+        return std::async(static_cast<void (GameService::*)(std::unique_ptr<Game>)>(&GameService::startNewGame), this, std::move(settings));
+    }
+
+    /**
+     * @brief Creates and starts a new game and returns a task
+     *
+     * @param boardWidth
+     * @param boardHeight
+     * @param snakeLength
+     * @return std::future<void>
+     */
+    std::future<void> startNewGameTask(const int boardWidth, const int boardHeight, const int snakeLength, const double gameSpeed)
+    {
+        return std::async(static_cast<void (GameService::*)(const int, const int, const int, const double)>(&GameService::startNewGame), this, boardWidth, boardHeight, snakeLength, gameSpeed);
+    }
+
+private:
+    /**
+     * @brief Starts the new game passed
+     *
+     * @note This function blocks while the game is running and exits when the game ends
+     * @param game The game to start
+     */
+    void startNewGame(std::unique_ptr<Game> game);
+
+    /**
+     * @brief Creates and starts a new game
+     *
+     * @note This function blocks while the game is running and exits when the game ends
+     * @param boardWidth
+     * @param boardHeight
+     * @param snakeLength
+     * @param gameSpeed
+     */
+    void startNewGame(const int boardWidth, const int boardHeight, const int snakeLength, const double gameSpeed);
 
     /**
      * @brief Updates the location of the apple
@@ -113,31 +166,6 @@ public:
      *
      */
     void createProcessLogicTask();
-
-    /**
-     * @brief Creates and starts a new game
-     *
-     * @note This function blocks while the game is running and exits when the game ends
-     * @param boardWidth
-     * @param boardHeight
-     * @param snakeLength
-     * @return std::future<void>
-     */
-    void startNewGame(int boardWidth, int boardHeight, int snakeLength);
-
-    /**
-     * @brief Creates and starts a new game and returns a task
-     *
-     * @param boardWidth
-     * @param boardHeight
-     * @param snakeLength
-     * @return std::future<void>
-     */
-    std::future<void> startNewGameTask(int boardWidth, int boardHeight, int snakeLength, double gameSpeed = 200.0)
-    {
-        this->gameSpeed = gameSpeed;
-        return std::async(&GameService::startNewGame, this, boardWidth, boardHeight, snakeLength);
-    }
 };
 
 #endif

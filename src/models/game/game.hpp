@@ -18,6 +18,16 @@ class Game
 {
 private:
     /**
+     * @brief The name of the player
+     */
+    std::string playerName;
+
+    /**
+     * @brief The game speed the game is played at (milliseconds between logical steps)
+     */
+    const double gameSpeed;
+
+    /**
      * @brief The score of the game
      *
      */
@@ -72,7 +82,7 @@ public:
      *
      * @return Point
      */
-    const Point &getApple() { return apple; }
+    const Point &getApple() const { return apple; }
 
     /**
      * @brief Set the Apple object
@@ -125,7 +135,7 @@ public:
      *
      * @return int
      */
-    int getScore() { return score; }
+    int getScore() const { return score; }
 
     /**
      * @brief Set the Score object
@@ -133,6 +143,23 @@ public:
      * @param score
      */
     void setScore(const int score) { this->score = score; }
+
+    /**
+     * @brief Set the player's name
+     *
+     * @param playerName The player's name
+     */
+    void setPlayerName(std::string playerName) { this->playerName = std::move(playerName); }
+
+    /**
+     * @brief Get the player's name
+     */
+    const std::string &getPlayerName() const { return playerName; }
+
+    /**
+     * @brief Get the game speed
+     */
+    const double getGameSpeed() const { return gameSpeed; }
 
     /**
      * @brief Set the Message object
@@ -166,12 +193,22 @@ public:
     const std::string &toString();
 
     /**
+     * Returns a string representing the games score
+     */
+    const std::string getScoreString() { return playerName + ' ' + std::to_string(score) + '\n' + std::to_string(board->getWidth()) + 'x' + std::to_string(board->getHeight()) + ' ' + std::to_string(snake->getBody().size()) + ' ' + std::to_string(gameSpeed); }
+
+    /**
+     * Return score string header
+     */
+    const static std::string getScoreHeader() { return "Player Score\nDimensions Length Speed"; }
+
+    /**
      * @brief Construct a new Game object
      *
      * @param board The new game's board
      * @param snake The new game's snake
      */
-    Game(std::unique_ptr<Board> board, std::unique_ptr<Snake> snake) : board(std::move(board)), snake(std::move(snake)), apple(getRandomVacantPoint()) {}
+    Game(std::unique_ptr<Board> board, std::unique_ptr<Snake> snake, const double gameSpeed = 200.0, const std::string &playerName = "Captain") : board(std::move(board)), snake(std::move(snake)), apple(getRandomVacantPoint()), gameSpeed(gameSpeed), playerName(playerName) {}
 };
 
 #endif

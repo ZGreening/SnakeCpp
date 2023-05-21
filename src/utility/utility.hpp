@@ -1,6 +1,7 @@
 #ifndef UTILITY_H
 #define UTILITY_H
 
+#include "SFML/Window.hpp"
 #include <thread>
 #include <chrono>
 #include <string_view>
@@ -24,6 +25,13 @@ private:
     static std::mutex ioMutex;
 
 public:
+    /**
+     * @brief Converts the SFML alphanumeric key to it's corresponding lowercase char
+     *
+     * @param key The key to convert
+     */
+    static char sfKeyToChar(sf::Keyboard::Key key);
+
     /**
      * @brief Get the Io Mutex object
      *
